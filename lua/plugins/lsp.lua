@@ -41,6 +41,26 @@ return {
             vim.lsp.enable("pyright")
             vim.lsp.enable("ruff")
 
+            --- NEW: SMART WORD HIGHLIGHTING ---
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    -- Only enable if the server supports it (Pyright and Lua_ls do)
+                    if client and client.server_capabilities.documentHighlightProvider then
+                        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                            buffer = args.buf,
+                            callback = vim.lsp.buf.document_highlight,
+                        })
+
+                        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                            buffer = args.buf,
+                            callback = vim.lsp.buf.clear_references,
+                        })
+                    end
+                end,
+            })
+
+
             -- Global Keymaps
             vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "LSP Hover" })
             vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Go to Definition" })
