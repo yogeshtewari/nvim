@@ -32,3 +32,10 @@ end
 
 -- Only apply these to terminal buffers
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+
+-- Buffer Navigation
+vim.keymap.set("n", "<S-l>", ":bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<S-h>", ":bprev<CR>", { desc = "Previous Buffer" })
+
+-- Close Buffer (The "X" button)
+vim.keymap.set("n", "<leader>x", ":bd<CR>", { desc = "Close Current Buffer" })
